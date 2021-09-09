@@ -1,0 +1,182 @@
+Data Exchange concepts
+
+Data Exchange uses the TC XML framework for data operations. The following are the basic concepts for understanding how you use Data Exchange.
+# Site
+A site () is a Teamcenter installation or manufacturer or supplier that uses some other method to manage their product data.
+# Export
+Export is the Data Exchange function used to send data to a remote site. While exporting the data, you can either transfer the data with ownership or transfer the data for reference. If you transfer the data for reference, the ownership is retained by the exporting site and a is exported to the remote site.
+# Import
+When a user exports data from a remote site to a Teamcenter site, the site imports the data automatically.
+# Replica
+Replication is the act of creating an exact copy of an object, known as a replica, at a specific site. Replicas are objects that are owned by a remote site. Whenever a master object is modified, you must update the replicas by synchronizing them to the master. A replica is a nonwriteable object and cannot be updated except by the owning site. When an object is replicated, you cannot delete the master object unless all the replicas are deleted.
+A replica is represented by a symbol with two green dots.
+# Synchronization
+When a master object is replicated at other sites, you must update the replicas whenever the master object is modified. The process of updating replicas is referred to as synchronization. The synchronizer is responsible for ensuring that a previously replicated data is synchronized.
+Manual synchronization is performed by a user. It is a re-export or re-import of the object with the same transfer formula. Automatic synchronization is supported for push cases and is initiated by integration framework making a call to transfer updated objects.
+
+*Caution. When manually synchronizing a replica, both the owning site and replica site must be online to receive replica deletion notification.
+
+* Note. Data Exchange does not support automatic pull synchronization.
+
+# Closure rule clause
+A closure rule clause () controls the scope of the data transfer. It defines the rules for gathering objects during the export action. Closure rules specify how the data structure is traversed by specifying the relationships of interest and the actions to occur when these relationships are encountered.
+Teamcenter also has many internal closure rules that handle out-of-the-box data model traversal. These are normally imported during installation or upgrade. They must not be changed. For instance, the inclusion of the BOM and Absolute Occurrence network is handled by internal closure rules.
+# Transfer mode
+A transfer mode () is a logical grouping of closure rule clauses. You select a transfer mode when creating closure rule clauses. Transfer modes allow users to export and import data by knowing only the transfer mode name that they must use, for example, ToSiteA or FromSiteB.
+# Transfer option
+Specifies the different options you can choose to use when Teamcenter transfers an object. The different transfer options are:
+- Include All Versions
+- Latest Versions
+- Selected Version
+- Include Entire BOM
+- Transfer Top Assembly
+# Transfer option set
+A transfer option set (TOS) () is a stored set of transfer options used for remote data export. A transfer option set displays all of the unique options in the closure rule conditional clauses for the selected transfer mode. The Description column of the TransferOptionSet pane in the PLM XML/TC XML Export Import Administration application describes the purpose of the options included in the standard Teamcenter transfer option sets.
+# Factor
+A factor is a logical concept defined by a set of objects at the exporting site that map to a similar logical concept defined by a different set of objects at the importing site. You define a factor using a closure rule. Closure rules help optimize Data Exchange performance.
+# File Management System (FMS) file transfer
+File Management System (FMS) is used for transferring files by geographically separated work groups whose sites are connected by wide area networks (WANs). It also allows access to shared documents in local area network caches, helps avoid round-trips across high-latency WAN networks to reach sites.
+FMS uses a file GUID, a business-neutral identifier for file contents, to determine when to pull a file from its local cache, rather than retrieving the file across a network from the underlying file system of the site. Binary and text files have a different GUIDs if they are replicated. However, if you change the file content by one bit or change its language encoding, the system creates a new file GUID to describe the new contents of the file.
+# Single sign-on (SSO)
+Security Services allows a user to sign on one time for access to multiple Teamcenter products. Data Exchange supports this functionality when its components are properly configured to use single sign-on (SSO).
+# Export protection
+The export protection capability of Data Exchange sends export-protected objects as stubs.
+# Replica deletion
+The replica deletion capability deletes the export record of an object on the master site when a replica is deleted on the remote site.
+# Stub replication
+The stub replication capability ensures that when a master object replica is sent to another site, the exporter creates an export record for this new site and tags it as stubbed.
+# International Traffic in Arms Regulations (ITAR) license
+Teamcenter provides support for enforcing policies of ITAR (International Traffic in Arms Regulations) to control dissemination of certain types of information through ITAR licenses that you can attach to workspace objects. If an ITAR license exists at the destination site, the license_id attribute associated with the workspace object can be imported.
+# Audit monitoring
+The integration framework provides an audit log of transactions during transfers between Teamcenter Enterprise and Teamcenter that is maintained in the integration framework database. The following transactions are logged:
+- Get objects for ownership transfer.
+- Transfer ownership to site.
+- Update ownership transfer to source site.
+# Organizational/license object audit logs
+Data Exchange transfers use the TC XML import and export (TIE) functionality to transfer objects between sites. TIE does not support replicating audit record business objects. Do not attempt to replicate the following objects between sites:
+- Fnd0LicenseChangeAudit
+- Fnd0LicenseExportAudit
+- Fnd0OrganizationAudit
+# Administrative objects
+The TC XML framework processes Teamcenter administrative objects differently from other objects. For example, during the import process, if an administrative object identified in the TC XML file is not found at the importing site, the import fails whether or not the exporting user selected the Continue On Error option. Objects of the following classes are considered administrative objects by the framework:
+- ADA_License
+- ClosureRule
+- Condition
+- CondValAgent
+- CondValAgentRevision
+- CondValData
+- CondValDataRevision
+- Filter
+- Fnd0AlgebraicFormula
+- FunctionalityRule
+- Group
+- GroupMember
+- IdContext
+- ImanType
+- NoteType
+- PIEActionRule
+- POM_imc
+- PropertySet
+- PSOccurrenceType
+- PSViewType
+- ResourcePool
+- RevisionRule
+- Role
+- TransferMode
+- TransferOptionSet
+- TC_Project
+- UnitOfMeasure
+- User
+- VerificationRule
+
+
+Концепции обмена данными
+
+Обмен данными использует инфраструктуру TC XML для операций с данными. Ниже приведены основные понятия для понимания того, как вы используете обмен данными.
+# Сайт
+Сайт () - это установка, производитель или поставщик Teamcenter, который использует какой-то другой метод для управления данными своего продукта.
+# Экспорт
+Экспорт - это функция обмена данными, используемая для отправки данных на удаленный сайт. При экспорте данных вы можете либо передавать данные с владельцем, либо передавать данные для справки. Если вы передаете данные для справки, право собственности сохраняется на экспортирующем сайте и экспортируется на удаленный сайт.
+# Импортировать
+Когда пользователь экспортирует данные с удаленного сайта на сайт Teamcenter, сайт импортирует данные автоматически.
+# Реплика
+Репликация - это создание точной копии объекта, известного как реплика, на определенном сайте. Реплики - это объекты, которые принадлежат удаленному сайту. Всякий раз, когда главный объект изменяется, вы должны обновить реплики, синхронизируя их с главным. Реплика является незаписываемым объектом и не может быть обновлена, кроме как владельцем сайта. Когда объект реплицируется, вы не можете удалить главный объект, если не удалены все реплики.
+Реплика представлена ??символом с двумя зелеными точками.
+# Синхронизация
+Когда главный объект реплицируется на других сайтах, вы должны обновлять реплики всякий раз, когда главный объект изменяется. Процесс обновления реплик называется синхронизацией. Синхронизатор отвечает за синхронизацию ранее реплицированных данных.
+Ручная синхронизация выполняется пользователем. Это реэкспорт или реимпорт объекта с той же формулой переноса. Автоматическая синхронизация поддерживается для случаев push-уведомлений и инициируется интеграционной платформой, выполняющей вызов для передачи обновленных объектов.
+
+* Внимание. При ручной синхронизации реплики и сайт-владелец, и сайт-реплика должны быть подключены к Интернету, чтобы получать уведомления об удалении реплики.
+
+* Заметка. Обмен данными не поддерживает автоматическую синхронизацию по запросу.
+
+# Закрытие правила
+Предложение правила замыкания () управляет областью передачи данных. Он определяет правила сбора объектов во время действия экспорта. Правила закрытия определяют способ обхода структуры данных путем указания интересующих отношений и действий, которые должны выполняться при обнаружении этих отношений.
+Teamcenter также имеет много внутренних правил закрытия, которые обрабатывают готовый обход модели данных. Они обычно импортируются во время установки или обновления. Они не должны быть изменены. Например, включение спецификации и сети Absolute Occurrence обрабатывается внутренними правилами закрытия.
+# Режим передачи
+Режим передачи () - это логическая группировка предложений правил замыкания. Вы выбираете режим передачи при создании предложений правил закрытия. Режимы передачи позволяют пользователям экспортировать и импортировать данные, зная только имя режима передачи, которое они должны использовать, например, ToSiteA или FromSiteB.
+Вариант передачи
+Определяет различные параметры, которые вы можете использовать, когда Teamcenter передает объект. Различные варианты передачи:
+- Включить все версии
+- Последние версии
+- Выбранная версия
+- Включить всю спецификацию
+- передача верхней сборки
+# Вариант передачи установлен
+Набор параметров передачи (TOS) () - это сохраненный набор параметров передачи, используемый для удаленного экспорта данных. В наборе параметров передачи отображаются все уникальные параметры в условных предложениях правила закрытия для выбранного режима передачи. В столбце «Описание» панели TransferOptionSet в приложении «Администрирование импорта-экспорта» PLM XML / TC XML описывается назначение опций, включенных в стандартные наборы опций переноса Teamcenter.
+# Фактор
+Фактор - это логическая концепция, определяемая набором объектов на сайте экспорта, которые сопоставляются с похожей логической концепцией, определенной другим набором объектов на сайте импорта. Вы определяете фактор с помощью правила закрытия. Правила закрытия помогают оптимизировать производительность обмена данными.
+# File Management System (FMS) передача файлов
+Система управления файлами (FMS) используется для передачи файлов географически разделенными рабочими группами, сайты которых связаны глобальными сетями (WAN). Он также обеспечивает доступ к совместно используемым документам в кэшах локальной сети, помогает избежать обходов по сетям WAN с высокой задержкой для достижения сайтов.
+FMS использует файловый GUID, нейтральный для бизнеса идентификатор содержимого файла, чтобы определить, когда извлекать файл из его локального кэша, а не извлекать файл по сети из базовой файловой системы сайта. Двоичные и текстовые файлы имеют разные идентификаторы GUID, если они реплицируются. Однако если вы измените содержимое файла на один бит или измените его языковую кодировку, система создаст новый GUID файла, чтобы описать новое содержимое файла.
+# Единый вход (SSO)
+Службы безопасности позволяют пользователю один раз войти в систему для доступа к нескольким продуктам Teamcenter. Обмен данными поддерживает эту функцию, когда его компоненты правильно настроены для использования единого входа (SSO).
+# Защита экспорта
+Функция защиты от экспорта в Data Exchange отправляет объекты, защищенные от экспорта, в качестве заглушек.
+# Удаление реплики
+Возможность удаления реплики удаляет запись экспорта объекта на главном сайте, когда реплика удаляется на удаленном сайте.
+# Заглушка репликации
+Возможность репликации заглушки гарантирует, что при отправке реплики главного объекта на другой сайт экспортер создает запись экспорта для этого нового сайта и помечает ее как заглушку.
+# Лицензия на международную торговлю оружием (ITAR)
+Teamcenter обеспечивает поддержку применения политик ITAR (Международные правила о торговле оружием) для контроля распространения определенных типов информации через лицензии ITAR, которые вы можете прикрепить к объектам рабочей области. Если на целевом сайте существует лицензия ITAR, можно импортировать атрибут license_id, связанный с объектом рабочей области.
+# Аудит мониторинга
+Инфраструктура интеграции предоставляет журнал аудита транзакций во время передач между Teamcenter Enterprise и Teamcenter, который ведется в базе данных инфраструктуры интеграции. Следующие транзакции регистрируются:
+- Получить объекты для передачи права собственности.
+- передать право собственности на сайт.
+- Обновление перехода собственности на исходный сайт.
+# Журналы аудита организационных / лицензионных объектов
+При передаче данных при обмене объектами между сайтами используются функции импорта и экспорта TC XML (TIE). TIE не поддерживает репликацию бизнес-объектов записей аудита. Не пытайтесь реплицировать следующие объекты между сайтами:
+- Fnd0LicenseChangeAudit
+- Fnd0LicenseExportAudit
+- Fnd0OrganizationAudit
+# Административные объекты
+Каркас TC XML обрабатывает административные объекты Teamcenter не так, как другие объекты. Например, в процессе импорта, если административный объект, указанный в XML-файле TC, не найден на сайте импорта, происходит сбой импорта, независимо от того, выбрал ли пользователь экспорта параметр «Продолжить при ошибке». Объекты следующих классов считаются административными объектами в рамках:
+- ADA_License
+- ClosureRule
+- Состояние
+- CondValAgent
+- CondValAgentRevision
+- CondValData
+- CondValDataRevision
+- фильтр
+- Fnd0AlgebraicFormula
+- FunctionalityRule
+- группа
+- GroupMember
+- IdContext
+- ImanType
+- NoteType
+- PIEActionRule
+- POM_imc
+- PropertySet
+- PSOccurrenceType
+- PSViewType
+- ResourcePool
+- RevisionRule
+- роль
+- TransferMode
+- TransferOptionSet
+- TC_Project
+- Единица измерения
+- Пользователь
+- VerificationRule
