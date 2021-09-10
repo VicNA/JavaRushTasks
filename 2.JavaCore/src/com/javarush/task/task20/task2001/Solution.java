@@ -24,6 +24,7 @@ public class Solution {
             somePerson.load(inputStream);
             inputStream.close();
             //check here that ivanov equals to somePerson - проверьте тут, что ivanov и somePerson равны
+            System.out.println(ivanov.equals(somePerson));
 
         } catch (IOException e) {
             //e.printStackTrace();
@@ -70,17 +71,21 @@ public class Solution {
             //implement this method - реализуйте этот метод
             PrintWriter pw = new PrintWriter(outputStream);
             pw.println(name);
-            if (assets != null || assets.size() > 0) {
-                for (Asset asset : assets) {
-                    pw.println(asset.getName() + " " + asset.getPrice());
-                }
+            if (assets != null && assets.size() > 0) {
+                assets.forEach(asset -> pw.println(asset.getName() + " " + asset.getPrice()));
             }
             pw.close();
         }
 
         public void load(InputStream inputStream) throws Exception {
             //implement this method - реализуйте этот метод
-//            inputStream.r
+            BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+            name = br.readLine();
+            String str;
+            while ((str = br.readLine()) != null) {
+                assets.add(new Asset(str.split(" ")[0], Double.parseDouble(str.split(" ")[1])));
+            }
+            br.close();
         }
     }
 }

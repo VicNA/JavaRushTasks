@@ -1,6 +1,8 @@
 package com.javarush.task.task20.task2004;
 
-/* 
+import java.io.*;
+
+/*
 Читаем и пишем в файл статики
 */
 public class Solution {
@@ -26,15 +28,20 @@ public class Solution {
 
             loadedObject.load(inputStream);
             //here check that the classWithStatic object is equal to the loadedObject object - проверьте тут, что classWithStatic и loadedObject равны
+            if (classWithStatic.equals(loadedObject)) {
+                System.out.println("Равны");
+            } else {
+                System.out.println("Не равны");
+            }
 
             outputStream.close();
             inputStream.close();
 
         } catch (IOException e) {
-            //e.printStackTrace();
+//            e.printStackTrace();
             System.out.println("Oops, something is wrong with my file");
         } catch (Exception e) {
-            //e.printStackTrace();
+//            e.printStackTrace();
             System.out.println("Oops, something is wrong with the save/load method");
         }
     }
@@ -46,10 +53,19 @@ public class Solution {
 
         public void save(OutputStream outputStream) throws Exception {
             //implement this method - реализуйте этот метод
+            PrintWriter pw = new PrintWriter(outputStream);
+            pw.println(staticString);
+            pw.println(i);
+            pw.println(j);
+            pw.flush();
         }
 
         public void load(InputStream inputStream) throws Exception {
             //implement this method - реализуйте этот метод
+            BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+            staticString = br.readLine();
+            i = Integer.parseInt(br.readLine());
+            j = Integer.parseInt(br.readLine());
         }
 
         @Override
